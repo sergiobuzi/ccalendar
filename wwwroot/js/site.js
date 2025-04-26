@@ -1,34 +1,45 @@
-﻿/*
-*CALENDARIO*
-*/
-document.addEventListener('DOMContentLoaded', function () {
+﻿document.addEventListener('DOMContentLoaded', function () {
     let selectedDate = null;
     let calendarEl = document.getElementById('calendar');
 
     let calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'timeGridWeek',
-        themeSystem: 'bootstrap5',
+        footerToolbar: true,
         selectable: true,
         locale: 'it',
         nowIndicator: true,
         timeZone: 'local',
+        firstDay: 1,
+        slotMinTime: "05:00:00",
+        slotMaxTime: "23:30:00",
+        allDaySlot: false,
         headerToolbar: {
             left: 'prev,next today',
             center: 'title',
             right: 'dayGridMonth,timeGridWeek,timeGridDay'
         },
+        buttonText: {
+            today: 'oggi',
+            month: 'mese',
+            week: 'settimana',
+            day: 'giorno',
+            list: 'lista'
+        },
         events: '/Home/GetEvents',
 
-        dateClick: function (info) {
-            selectedDate = new Date(info.dateStr);
+        dateClick: async function (info) {
 
-            document.getElementById('eventTitle').value = '';
+            selectedDate = new Date(info.dateStr);
             document.getElementById('eventDate').value = selectedDate.toISOString().split('T')[0];
             document.getElementById('eventTime').value = selectedDate.toTimeString().slice(0, 5);
-            document.getElementById('eventDuration').value = 60;
 
-            let eventModal = new bootstrap.Modal(document.getElementById('eventModal'));
-            eventModal.show();
+            initializeModal('empty');
+
+            let customers = [];
+            
+            if (customers.length === 0) {
+                await loadCustomers();
+            }
         },
 
         eventClick: function (info) {
@@ -71,6 +82,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
 
                 if (!response.ok) {
+                    showSimpleAlert("error", "Errore di comunicazione.");
                     throw new Error(`Response status: ${response.status}`);
                 }
 
@@ -106,29 +118,68 @@ document.addEventListener('DOMContentLoaded', function () {
     calendar.render();
 });
 
-/*
-*NAVBAR*
-*/
+//inizializzazione del modal
+function initializeModal(modalType, element){
+    if(modalType == 'empty'){
 
-async function openModalWithCustomerData(element) {
-    const id = element.dataset.customerId;
-    const name = element.dataset.name;
-    const surname = element.dataset.surname;
-    const mobile = element.dataset.mobile;
-    const email = element.dataset.email;
+        document.getElementById('customerName').value = '';
+        document.getElementById('customerSurname').value = '';
+        document.getElementById('customerEmail').value = '';
+        document.getElementById('customerPhone').value = '';
+        document.getElementById('customerId').value = '';
+        document.getElementById('eventDuration').value = 0;
+        document.getElementById('eventNotes').value = '';
+        document.getElementById('eventTitle').value = '';
 
-    // Valorizza i campi del modale
-    document.getElementById('customerName').value = name;
-    document.getElementById('customerSurname').value = surname;
-    document.getElementById('customerEmail').value = email;
-    document.getElementById('customerPhone').value = mobile;
-    document.getElementById('customerId').value = id;
+    }else{
 
-    // Mostra il modale
-    const myModal = new bootstrap.Modal(document.getElementById('eventModal'));
-    myModal.show();
-};
+        const id = element.dataset.customerId;
+        const name = element.dataset.name;
+        const surname = element.dataset.surname;
+        const mobile = element.dataset.mobile;
+        const email = element.dataset.email;
 
+        // Valorizza i campi del modale
+        document.getElementById('customerName').value = name;
+        document.getElementById('customerSurname').value = surname;
+        document.getElementById('customerEmail').value = email;
+        document.getElementById('customerPhone').value = mobile;
+        document.getElementById('customerId').value = id;
+        document.getElementById('eventDate').value = "";
+        document.getElementById('eventTime').value = "";
+        document.getElementById('eventDuration').value = 0;
+        document.getElementById('eventNotes').value = "";
+        document.getElementById('eventTitle').value = "";
+    }
+
+    let eventModal = new bootstrap.Modal(document.getElementById('eventModal'));
+    eventModal.show();
+
+    return;
+}
+
+//Assegnazione automatica della durata tramite la select
+document.getElementById('eventTitle').addEventListener('change', function () {
+    const durationInput = document.getElementById('eventDuration');
+    const selectedValue = this.value;
+
+    switch (selectedValue) {
+        case 'Igiene professionale':
+            durationInput.value = 30; 
+            break;
+        case 'Igiene professionale + illuminante':
+            durationInput.value = 40; 
+            break;
+        case 'Sbiancamento':
+            durationInput.value = 30;
+            break;
+        default:
+            durationInput.value = 0; 
+            break;
+    }
+});
+
+/*Rimuovi cliente dalla lista dopo aver preso appuntamento */
 function removeCustomerFromList(customerId){
     const customerItems = document.querySelectorAll('.customer-element');
 
@@ -147,4 +198,14 @@ function removeCustomerFromList(customerId){
         }
     }
 
+}
+
+//Prendo la lista dei clienti
+async function loadCustomers() {
+    try {
+        const response = await fetch('/Home/GetCustomers');
+        customers = await response.json();
+    } catch (error) {
+        console.error('Errore caricamento clienti:', error);
+    }
 }

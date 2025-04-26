@@ -4,7 +4,7 @@
 
 <div id='calendar'></div>
 
-<!-- Modale per nuovo evento -->
+<!-- Modale per nuovo evento con cliente-->
 <div class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -14,16 +14,24 @@
             </div>
             <div class="modal-body">
                 <form id="eventForm" method="post">
+                    <div class="mb-3 form-floating">
+                        <input type="text" class="form-control" id="customerSearch" placeholder="Cerca cliente...">
+                        <label for="customerSearch">Cerca cliente...</label>
+                    </div>
+                    <div class="mb-3">
+                        <div id="customerResults" class="list-group"></div>
+                    </div>
+
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <div class="form-floating">
-                                <input type="text" class="form-control" id="customerName" placeholder="Nome" disabled required>
+                                <input type="text" class="form-control" id="customerName" placeholder="Nome" required>
                                 <label for="customerName">Nome</label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating">
-                                <input type="text" class="form-control" id="customerSurname" placeholder="Cognome" disabled required>
+                                <input type="text" class="form-control" id="customerSurname" placeholder="Cognome" required>
                                 <label for="customerSurname">Cognome</label>
                             </div>
                         </div>
@@ -44,9 +52,13 @@
                         </div>
                     </div>
 
-                    <div class="mb-3 form-floating">
-                        <input type="text" class="form-control" id="eventTitle" required>
-                        <label for="eventTitle">Operazione</label>
+                    <div class="mb-3">
+                        <select id="eventTitle" class="form-select" required>
+                            <option value="" selected>-- Seleziona Operazione --</option>
+                            <option value="Igiene professionale">Igiene professionale</option>
+                            <option value="Igiene professionale + illuminante">Igiene professionale + illuminante</option>
+                            <option value="Sbiancamento">Sbiancamento</option>
+                        </select>
                     </div>
 
                     <div class="mb-3 form-floating">
@@ -60,7 +72,7 @@
                     </div>
 
                     <div class="mb-3 form-floating">
-                        <input type="number" class="form-control" id="eventDuration" value="30" min="1" required>
+                        <input type="number" class="form-control" id="eventDuration" min="1" required>
                         <label for="eventDuration">Durata (minuti)</label>
                     </div>
                     <div class="mb-3 form-floating">
