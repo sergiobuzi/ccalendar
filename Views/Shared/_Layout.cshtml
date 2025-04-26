@@ -1,0 +1,21 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    @await Component.InvokeAsync("Head")
+</head>
+
+<body>
+    @await Component.InvokeAsync("Header")
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    @await Component.InvokeAsync("Footer")
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,80 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div id='calendar'></div>
+
+<!-- Modale per nuovo evento -->
+<div class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="eventModalLabel">Crea nuovo evento</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Chiudi"></button>
+            </div>
+            <div class="modal-body">
+                <form id="eventForm" method="post">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="customerName" placeholder="Nome" disabled required>
+                                <label for="customerName">Nome</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="customerSurname" placeholder="Cognome" disabled required>
+                                <label for="customerSurname">Cognome</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="email" class="form-control" id="customerEmail" placeholder="Email">
+                                <label for="customerEmail">Email</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="tel" class="form-control" id="customerPhone" placeholder="Telefono">
+                                <label for="customerPhone">Telefono</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 form-floating">
+                        <input type="text" class="form-control" id="eventTitle" required>
+                        <label for="eventTitle">Operazione</label>
+                    </div>
+
+                    <div class="mb-3 form-floating">
+                        <input type="date" class="form-control" id="eventDate" placeholder="Data" required>
+                        <label for="eventDate">Data</label>
+                    </div>
+
+                    <div class="mb-3 form-floating">
+                        <input type="time" class="form-control" id="eventTime" placeholder="Orario inizio" required>
+                        <label for="eventTime">Orario inizio</label>
+                    </div>
+
+                    <div class="mb-3 form-floating">
+                        <input type="number" class="form-control" id="eventDuration" value="30" min="1" required>
+                        <label for="eventDuration">Durata (minuti)</label>
+                    </div>
+                    <div class="mb-3 form-floating">
+                        <textarea class="form-control" id="eventNotes"></textarea>
+                        <label for="eventNotes">Note (Opzionale)</label>
+                    </div>
+
+                    <input type="hidden" id="customerId" required>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
+                <button type="button" class="btn btn-primary" id="saveEventBtn">Salva</button>
+            </div>
+        </div>
+    </div>
+</div>
