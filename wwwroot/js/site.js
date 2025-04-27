@@ -162,7 +162,9 @@
                     calendar.addEvent({
                         title: title,
                         start: start,
-                        end: end
+                        end: end,
+                        backgroundColor: color,
+                        borderColor: color,
                     });
     
                     let modal = bootstrap.Modal.getInstance(document.getElementById('eventModal'));
