@@ -17,5 +17,6 @@ namespace ccalendar.Services.Interfaces
         Task<JsonResult> GetEvents();
         Task<JsonResult> SearchCustomers(string text);
         Task<JsonResult> GetCustomerById(int id);
+        Task<bool> CreateCustomerAndEvent(EventCreateDto dto);
     }
 }

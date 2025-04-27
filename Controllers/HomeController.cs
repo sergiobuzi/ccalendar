@@ -32,13 +32,6 @@ public class HomeController : Controller
         return json;
     }
 
-    [HttpPost]
-    public async Task<bool> CreateEvent([FromBody] EventCreateDto model)
-    {
-        bool result = await _homeServices.CreateEvent(model);
-        return result;
-    }
-
     [HttpGet]
     public async Task<IActionResult> SearchCustomers([FromQuery]string query)
     {
@@ -51,6 +44,20 @@ public class HomeController : Controller
     {
         JsonResult json = await _homeServices.GetCustomerById(id);
         return json;
+    }
+
+    [HttpPost]
+    public async Task<bool> CreateEvent([FromBody] EventCreateDto model)
+    {
+        bool result = await _homeServices.CreateEvent(model);
+        return result;
+    }
+
+    [HttpPost]
+    public async Task<bool> CreateCustomerAndEvent([FromBody] EventCreateDto model)
+    {
+        bool result = await _homeServices.CreateCustomerAndEvent(model);
+        return result;
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -37,7 +37,6 @@
 
             getInfoAlert();
 
-
         },
 
         eventClick: function (info) {
@@ -57,58 +56,127 @@
         let duration = parseInt(document.getElementById('eventDuration').value);
         let notes = document.getElementById('eventNotes').value;
 
+        let colorEl = document.getElementById('eventTitle');
+        let selectedOption = colorEl.options[colorEl.selectedIndex];
+        let color = selectedOption.dataset.color;
+
         if (title && date && time && duration > 0) {
             let start = new Date(date + 'T' + time);
             let end = new Date(start.getTime() + duration * 60000);
 
-            const eventData = {
-                CustomerId: customerId,
-                Title: title,
-                Start: start.toISOString(),
-                End: end.toISOString(),
-                Duration: duration,
-                AllDay: false,
-                Notes: notes
-            };
 
-            try {
-                const response = await fetch("/Home/CreateEvent", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(eventData)
-                });
+            //se l'utente NON esiste
+            if (customerId <= 0 || customerId == "") {
 
-                if (!response.ok) {
-                    showSimpleAlert("error", "Errore di comunicazione.");
-                    throw new Error(`Response status: ${response.status}`);
+                let customerName = document.getElementById('customerName').value;
+                let customerSurname = document.getElementById('customerSurname').value;
+                let customerEmail = document.getElementById('customerEmail').value || "";
+                let customerPhone = document.getElementById('customerPhone').value;
+                
+                const eventData = {
+                    CustomerName: customerName,
+                    CustomerSurname: customerSurname,
+                    CustomerEmail: customerEmail,
+                    CustomerPhone: customerPhone,
+                    Title: title,
+                    Start: start.toISOString(),
+                    End: end.toISOString(),
+                    Duration: duration,
+                    AllDay: false,
+                    Notes: notes,
+                    Color: color
+                };
+
+                try {
+                    const response = await fetch("/Home/CreateCustomerAndEvent", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(eventData)
+                    });
+    
+                    if (!response.ok) {
+                        showSimpleAlert("error", "Errore di comunicazione.");
+                        throw new Error(`Response status: ${response.status}`);
+                    }
+    
+                    const json = await response.json();
+                    const obj = JSON.parse(json);
+                    if(!obj){
+                        showSimpleAlert("error", "Errore nell'inserimento.");
+                        return;
+                    }
+    
+                    // Aggiungi l'evento nel calendario
+                    calendar.addEvent({
+                        title: title,
+                        start: start,
+                        end: end
+                    });
+    
+                    let modal = bootstrap.Modal.getInstance(document.getElementById('eventModal'));
+                    modal.hide();
+    
+                    showSimpleAlert("success", "Evento inserito con successo!");
+    
+                } catch (error) {
+                    console.error("Errore durante la creazione dell'evento:", error.message);
                 }
 
-                const json = await response.json();
-                const obj = JSON.parse(json);
-                if(!obj){
-                    showSimpleAlert("error", "Errore nell'inserimento dell'evento.");
-                    return;
+            } else {
+
+                const eventData = {
+                    CustomerId: customerId,
+                    Title: title,
+                    Start: start.toISOString(),
+                    End: end.toISOString(),
+                    Duration: duration,
+                    AllDay: false,
+                    Notes: notes,
+                    Color: color
+                };
+    
+                try {
+                    const response = await fetch("/Home/CreateEvent", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(eventData)
+                    });
+    
+                    if (!response.ok) {
+                        showSimpleAlert("error", "Errore di comunicazione.");
+                        throw new Error(`Response status: ${response.status}`);
+                    }
+    
+                    const json = await response.json();
+                    const obj = JSON.parse(json);
+                    if(!obj){
+                        showSimpleAlert("error", "Errore nell'inserimento dell'evento.");
+                        return;
+                    }
+    
+                    // Aggiungi l'evento nel calendario
+                    calendar.addEvent({
+                        title: title,
+                        start: start,
+                        end: end
+                    });
+    
+                    let modal = bootstrap.Modal.getInstance(document.getElementById('eventModal'));
+                    modal.hide();
+    
+                    showSimpleAlert("success", "Evento inserito con successo!");
+    
+                    removeCustomerFromList(customerId);
+    
+                } catch (error) {
+                    console.error("Errore durante la creazione dell'evento:", error.message);
                 }
-
-                // Aggiungi l'evento nel calendario
-                calendar.addEvent({
-                    title: title,
-                    start: start,
-                    end: end
-                });
-
-                let modal = bootstrap.Modal.getInstance(document.getElementById('eventModal'));
-                modal.hide();
-
-                showSimpleAlert("success", "Evento inserito con successo!");
-
-                removeCustomerFromList(customerId);
-
-            } catch (error) {
-                console.error("Errore durante la creazione dell'evento:", error.message);
             }
+
         } else {
             showSimpleAlert("error", "Compila tutti i campi obbligatori");
         }
@@ -196,11 +264,6 @@ function removeCustomerFromList(customerId){
             badge.textContent = number - 1;
         }
     }
-
-}
-
-function searchExistingCustomer() {
-    document.getElementById("createCustomerButtons").classList.add("d-none");
 
 }
 

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using ccalendar.Data;
@@ -95,6 +96,55 @@ namespace ccalendar.Services
             }
         }
 
+        public async Task<bool> CreateCustomerAndEvent(EventCreateDto dto)
+        {
+            try
+            {
+                Customer customer = new Customer()
+                {
+                    Name = dto.CustomerName,
+                    Surname = dto.CustomerSurname,
+                    Email = dto.CustomerEmail,
+                    Mobile = dto.CustomerPhone,
+                    ToCall = false,
+                    Active = true,
+                    LastContact = DateTime.Now,
+                    CreatedAt = DateAndTime.Now,
+                };
+
+                await _context.Customers.AddAsync(customer);
+                await _context.SaveChangesAsync();
+
+                var localStart = TimeZoneInfo.ConvertTimeFromUtc(
+                    dto.Start.ToUniversalTime(),
+                    TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"));
+                    
+                var localEnd = TimeZoneInfo.ConvertTimeFromUtc(
+                    dto.End.ToUniversalTime(),
+                    TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"));
+
+                Event model = new Event()
+                {
+                    CustomerId = customer.CustomerId,
+                    Title = dto.Title,
+                    Start = localStart,
+                    End = localEnd,
+                    AllDay = dto.AllDay,
+                    Color = dto.Color,
+                    Notes = dto.Notes
+                };
+
+                await _context.Events.AddAsync(model);
+                await _context.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ee)
+            {
+                throw new Exception(ee.Message);
+            }
+        }
+
         public async Task<JsonResult> GetEvents()
         {
             try
@@ -105,7 +155,8 @@ namespace ccalendar.Services
                         title = e.Title,
                         start = e.Start,
                         end = e.End,
-                        allDay = e.AllDay
+                        allDay = e.AllDay,
+                        color = e.Color
                     }).ToListAsync();
 
                 return new JsonResult(events);
