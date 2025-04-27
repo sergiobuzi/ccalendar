@@ -35,15 +35,14 @@
 
             initializeModal('empty');
 
-            let customers = [];
-            
-            if (customers.length === 0) {
-                await loadCustomers();
-            }
+            getInfoAlert();
+
+
         },
 
         eventClick: function (info) {
             alert('Evento: ' + info.event.title);
+            console.log(info)
         },
 
     });
@@ -150,10 +149,10 @@ function initializeModal(modalType, element){
         document.getElementById('eventDuration').value = 0;
         document.getElementById('eventNotes').value = "";
         document.getElementById('eventTitle').value = "";
-    }
 
-    let eventModal = new bootstrap.Modal(document.getElementById('eventModal'));
-    eventModal.show();
+        let eventModal = new bootstrap.Modal(document.getElementById('eventModal'));
+        eventModal.show();
+    }
 
     return;
 }
@@ -200,12 +199,76 @@ function removeCustomerFromList(customerId){
 
 }
 
+function searchExistingCustomer() {
+    document.getElementById("createCustomerButtons").classList.add("d-none");
+
+}
+
 //Prendo la lista dei clienti
-async function loadCustomers() {
-    try {
-        const response = await fetch('/Home/GetCustomers');
-        customers = await response.json();
-    } catch (error) {
-        console.error('Errore caricamento clienti:', error);
-    }
+async function openSearchUserAlert() {
+    await Swal.fire({
+        title: 'Cerca cliente',
+        html: `
+            <input type="text" id="searchInput" class="form-control mb-3" placeholder="Scrivi nome o cognome...">
+            <div id="searchResults" style="max-height: 200px; overflow-y: auto;"></div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'Seleziona',
+        cancelButtonText: 'Annulla',
+        preConfirm: () => {
+            const customerSelect = document.getElementById('customerSelect');
+            if (customerSelect && customerSelect.value) {
+                return customerSelect.value;
+            } else {
+                Swal.showValidationMessage('Seleziona un cliente');
+                return false;
+            }
+        },
+        didOpen: () => {
+            const searchInput = document.getElementById('searchInput');
+            searchInput.focus();
+            searchInput.addEventListener('input', async function () {
+                const query = this.value.trim();
+                if (query.length >= 2) {
+                    const response = await fetch(`/Home/SearchCustomers?query=${encodeURIComponent(query)}`);
+                    const customers = await response.json();
+                    const resultsContainer = document.getElementById('searchResults');
+        
+                    if (customers.length === 0) {
+                        resultsContainer.innerHTML = '<div class="text-muted">Nessun risultato</div>';
+                    } else {
+                        resultsContainer.innerHTML = `
+                            <select class="form-select" size="5" id="customerSelect" required>
+                                ${customers.map(c => `
+                                    <option value="${c.id}">${c.name} ${c.surname}</option>
+                                `).join('')}
+                            </select>
+                        `;
+                    }
+                } else {
+                    document.getElementById('searchResults').innerHTML = '';
+                }
+            });
+        }
+    }).then((result) => {
+        if (result.isConfirmed && result.value) {
+            const selectedCustomerId = result.value;
+            loadCustomerData(selectedCustomerId);
+        }
+    });
+}
+
+//carico i dati del cliente già esistente
+async function loadCustomerData(customerId) {
+    const response = await fetch(`/Home/GetCustomerById?id=${customerId}`);
+    const customer = await response.json();
+
+    document.getElementById('customerId').value = customer.id;
+    document.getElementById('customerName').value = customer.name;
+    document.getElementById('customerSurname').value = customer.surname;
+    document.getElementById('customerEmail').value = customer.email || "";
+    document.getElementById('customerPhone').value = customer.mobile;
+
+    let eventModal = new bootstrap.Modal(document.getElementById('eventModal'));
+    eventModal.show();
 }

@@ -39,6 +39,20 @@ public class HomeController : Controller
         return result;
     }
 
+    [HttpGet]
+    public async Task<IActionResult> SearchCustomers([FromQuery]string query)
+    {
+        JsonResult json = await _homeServices.SearchCustomers(query);
+        return json;
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetCustomerById([FromQuery]int id)
+    {
+        JsonResult json = await _homeServices.GetCustomerById(id);
+        return json;
+    }
+
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {

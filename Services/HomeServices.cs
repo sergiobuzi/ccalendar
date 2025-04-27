@@ -116,5 +116,49 @@ namespace ccalendar.Services
             }
         }
 
+
+        public async Task<JsonResult> SearchCustomers(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                return new JsonResult(new List<object>());
+            }
+
+            var customers = await _context.Customers
+                .Where(c => c.Name.Contains(text) || c.Surname.Contains(text))
+                .Select(c => new
+                {
+                    Id = c.CustomerId,
+                    Name = c.Name,
+                    Surname = c.Surname
+                })
+                .Take(10) // massimo 10 risultati per evitare di caricare troppo
+                .ToListAsync();
+
+            return new JsonResult(customers);
+        }
+
+        public async Task<JsonResult> GetCustomerById(int id)
+        {
+            if (id == 0)
+            {
+                return new JsonResult(new object());
+            }
+
+            var customer = await _context.Customers
+                .Where(c => c.CustomerId == id)
+                .Select(c => new
+                {
+                    Id = c.CustomerId,
+                    Name = c.Name,
+                    Surname = c.Surname,
+                    Email = c.Email,
+                    Mobile = c.Mobile
+                })
+                .FirstOrDefaultAsync();
+    
+            return new JsonResult(customer);
+        }
+
     }
 }

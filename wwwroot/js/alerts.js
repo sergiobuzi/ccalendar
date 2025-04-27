@@ -7,19 +7,21 @@ function showSimpleAlert(icon, title){
     });
 }
 
-// function showOptionsAlert(){
-//     Swal.fire({
-//         title: "Do you want to save the changes?",
-//         showDenyButton: true,
-//         showCancelButton: true,
-//         confirmButtonText: "Save",
-//         denyButtonText: `Don't save`
-//         }).then((result) => {
-//         /* Read more about isConfirmed, isDenied below */
-//         if (result.isConfirmed) {
-//             Swal.fire("Saved!", "", "success");
-//         } else if (result.isDenied) {
-//             Swal.fire("Changes are not saved", "", "info");
-//         }
-//     });
-// }
+function getInfoAlert() {
+    Swal.fire({
+        text: "Creane uno nuovo cliente oppure selezionane uno già esistente",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#0d6efd",
+        confirmButtonText: "Già esistente",
+        cancelButtonColor: "#2c3e50",
+        cancelButtonText: "Crea nuovo"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            openSearchUserAlert();
+        } else {
+            let eventModal = new bootstrap.Modal(document.getElementById('eventModal'));
+            eventModal.show();
+        }
+    });
+}

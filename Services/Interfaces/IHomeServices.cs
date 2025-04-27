@@ -15,5 +15,7 @@ namespace ccalendar.Services.Interfaces
         Task<List<CustomerListViewModel>> GetCustomersToRecall();
         Task<bool> CreateEvent(EventCreateDto model);
         Task<JsonResult> GetEvents();
+        Task<JsonResult> SearchCustomers(string text);
+        Task<JsonResult> GetCustomerById(int id);
     }
 }
