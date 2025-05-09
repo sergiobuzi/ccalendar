@@ -1,9 +1,11 @@
 @model List<CustomerListViewModel>
 
 <header>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-        <div class="container-fluid">
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">ccalendar</a>
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-3">
+        <div class="container">
+            <a class="navbar-brand img-container" asp-area="" asp-controller="Home" asp-action="Index" style="max-width: 200px;">
+                <img  class="img-fluid" src="~/img/ccalendar-logo.png" alt="ccalendar-logo">
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -14,7 +16,7 @@
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <div class="btn-group">
-                                <button class="btn btn-primary btn-sm dropdown-toggle position-relative" type="button"
+                                <button class="btn btn-primary dropdown-toggle position-relative" type="button"
                                     data-bs-toggle="dropdown" aria-expanded="false">
                                     Da chiamare
                                     <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="customer-list-badge-number">
@@ -46,6 +48,7 @@
                             </div>
                         </li>
                     </ul>
+                    <a asp-action="CreateCustomer" type="button" class="btn btn-success me-2">Crea Cliente</a>
                     <partial name="_LoginPartial" />
                 </div>
             }

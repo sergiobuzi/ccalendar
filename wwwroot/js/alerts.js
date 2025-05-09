@@ -15,11 +15,13 @@ function getInfoAlert() {
         confirmButtonColor: "#0d6efd",
         confirmButtonText: "Già esistente",
         cancelButtonColor: "#2c3e50",
-        cancelButtonText: "Crea nuovo"
+        cancelButtonText: "Crea nuovo",
+        allowOutsideClick: true,
+        allowEscapeKey: true
     }).then((result) => {
         if (result.isConfirmed) {
             openSearchUserAlert();
-        } else {
+        } else if(result.dismiss === Swal.DismissReason.cancel){
             let eventModal = new bootstrap.Modal(document.getElementById('eventModal'));
             eventModal.show();
         }
