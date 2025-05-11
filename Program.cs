@@ -24,6 +24,13 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddRazorPages(options =>
+{
+    options.Conventions.AuthorizeAreaFolder("Identity", "/");
+    options.Conventions.AllowAnonymousToAreaPage("Identity", "/Account/Login");
+    options.Conventions.AllowAnonymousToAreaPage("Identity", "/Account/Logout");
+});
+
 // Dependency Injection
 builder.Services.AddScoped<IHomeServices, HomeServices>();
 
