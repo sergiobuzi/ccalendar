@@ -26,14 +26,29 @@ public class HomeController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetEvents()
+    public async Task<JsonResult> GetEvents()
     {
         JsonResult json = await _homeServices.GetEvents();
         return json;
     }
 
     [HttpGet]
-    public async Task<IActionResult> SearchCustomers([FromQuery]string query)
+    public async Task<JsonResult> EventDetails([FromQuery] int id)
+    {
+        JsonResult json = await _homeServices.EventDetails(id);
+        return json;
+    }
+
+    [HttpGet]
+    [Route("Home/EditEvent/{eventId}")]
+    public async Task<IActionResult> EditEvent(int eventId)
+    {
+        EventDetails model = await _homeServices.EditEvent(eventId);
+        return View("EditEvent", model);
+    }
+
+    [HttpGet]
+    public async Task<JsonResult> SearchCustomers([FromQuery]string query)
     {
         JsonResult json = await _homeServices.SearchCustomers(query);
         return json;
@@ -57,6 +72,13 @@ public class HomeController : Controller
     public async Task<bool> CreateCustomerAndEvent([FromBody] EventCreateDto model)
     {
         bool result = await _homeServices.CreateCustomerAndEvent(model);
+        return result;
+    }
+
+    [HttpPost]
+    public async Task<bool> DeleteEvent([FromQuery] int eventId)
+    {
+        bool result = await _homeServices.DeleteEvent(eventId);
         return result;
     }
 

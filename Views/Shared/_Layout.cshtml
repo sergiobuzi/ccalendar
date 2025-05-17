@@ -8,6 +8,11 @@
 <body>
     @await Component.InvokeAsync("Header")
 
+    @* loader *@
+    <div id="loader" class="d-flex justify-content-center loader-wrapper">
+        <div class="spinner-grow text-primary" role="status"></div>
+    </div>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()

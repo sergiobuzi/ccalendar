@@ -1,0 +1,74 @@
+@model EventDetails
+
+<div class="container mt-5 mb-5">
+    <form asp-controller="Home" asp-action="UpdateEvent" method="post" class="row g-3">
+    
+        <input type="hidden" asp-for="EventId" />
+
+        <div class="col-md-12 mb-3">
+            <a asp-action="Index" class="text-white"><i class="fa-solid fa-arrow-left"></i> Torna alla Home</a>
+        </div>
+    
+        <div class="row">
+            <h1><i class="fa-solid fa-tooth"></i> Evento</h1>
+            <hr>
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="Title" class="form-label">Titolo</label>
+            <input asp-for="Title" class="form-control" />
+        </div>
+    
+        <div class="col-md-6">
+            <label asp-for="Start" class="form-label">Inizio</label>
+            <input asp-for="Start" class="form-control" type="datetime-local" />
+        </div>
+    
+        <div class="col-md-6">
+            <label asp-for="End" class="form-label">Fine</label>
+            <input asp-for="End" class="form-control" type="datetime-local" />
+        </div>
+    
+        <div class="col-md-6">
+            <label asp-for="Notes" class="form-label">Note</label>
+            <textarea asp-for="Notes" class="form-control" rows="3"></textarea>
+        </div>
+
+        <div class="row mt-5">
+            <h1><i class="fa-solid fa-user"></i> Cliente</h1>
+            <hr>
+        </div>
+    
+        <div class="col-md-4">
+            <label asp-for="Name" class="form-label">Nome</label>
+            <input asp-for="Name" class="form-control"/>
+        </div>
+    
+        <div class="col-md-4">
+            <label asp-for="Surname" class="form-label">Cognome</label>
+            <input asp-for="Surname" class="form-control"/>
+        </div>
+    
+        <div class="col-md-4">
+            <label asp-for="Mobile" class="form-label">Telefono</label>
+            <input asp-for="Mobile" class="form-control"/>
+        </div>
+    
+        <div class="col-md-4">
+            <label asp-for="Email" class="form-label">Email</label>
+            <input asp-for="Email" class="form-control" type="email"/>
+        </div>
+    
+        <div class="col-md-4">
+            <label asp-for="LastVisitDate" class="form-label">Ultima Visita</label>
+            <input asp-for="LastVisitDate" class="form-control" type="date"/>
+        </div>
+    
+        <div class="col-12 mt-4 d-flex gap-3">
+            <a onclick="showAlertDeleteEvent(@Model.EventId)" class="btn btn-danger">Elimina <i class="fa-solid fa-x ms-2"></i></a>
+            <button type="submit" class="btn btn-primary">Salva modifiche <i class="fa-solid fa-pen ms-2"></i></button>
+        </div>
+    </form>
+</div>
+
+@* todo finire la edit e la delete *@

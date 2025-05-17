@@ -18,7 +18,7 @@
                             <div class="btn-group">
                                 <button class="btn btn-primary dropdown-toggle position-relative" type="button"
                                     data-bs-toggle="dropdown" aria-expanded="false">
-                                    Da chiamare
+                                    <i class="fa-solid fa-phone me-2"></i>Da chiamare
                                     <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="customer-list-badge-number">
                                         @ViewBag.GetCustomersToRecallNumber
                                     </span>
@@ -26,7 +26,7 @@
                                 <ul class="dropdown-menu">
                                     @if(ViewBag.GetCustomersToRecallNumber <= 0)
                                     {
-                                        <p>Nessun cliente da chiamare</p>
+                                        <p class="p-3">Nessun cliente da chiamare</p>
                                     }
                                     else
                                     {
@@ -48,7 +48,6 @@
                             </div>
                         </li>
                     </ul>
-                    <a asp-action="CreateCustomer" type="button" class="btn btn-success me-2">Crea Cliente</a>
                     <partial name="_LoginPartial" />
                 </div>
             }

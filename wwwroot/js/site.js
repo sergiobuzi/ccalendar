@@ -39,9 +39,12 @@
 
         },
 
-        eventClick: function (info) {
-            alert('Evento: ' + info.event.title);
-            console.log(info)
+        eventClick: async function (info) {
+            const id = info.event.id;
+            const response = await fetch(`/Home/EventDetails?id=${encodeURIComponent(id)}`);
+            const event = await response.json();
+            console.log(event)
+            showEventAlert(event);
         },
 
     });
@@ -339,10 +342,3 @@ async function loadCustomerData(customerId) {
     let eventModal = new bootstrap.Modal(document.getElementById('eventModal'));
     eventModal.show();
 }
-
-
-//prendo i dati e mostro alert cliccando sull'evento
-let events = document.querySelectorAll(".fc-event");
-console.log(events)
-
-//TODO fare endpoint per prendere dati dell'evento quando ci clicco sopra 
