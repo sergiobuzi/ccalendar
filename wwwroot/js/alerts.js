@@ -24,6 +24,12 @@ function getInfoAlert() {
         if (result.isConfirmed) {
             openSearchUserAlert();
         } else if(result.dismiss === Swal.DismissReason.cancel){
+            
+            // Pulisci completamente il wrapper (incluso l'elemento #qrcode)
+            const wrapper = document.getElementById("qrcode-wrapper");
+            if (!wrapper) return;
+            wrapper.innerHTML = "";
+
             let eventModal = new bootstrap.Modal(document.getElementById('eventModal'));
             eventModal.show();
         }
@@ -69,19 +75,21 @@ async function showAlertDeleteEvent(eventId){
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#d33",
-        confirmButtonText: "Elimina",
+        confirmButtonText: `Elimina <i class="fa-solid fa-trash"></i>`,
         cancelButtonColor: "#6c757d",
         cancelButtonText: "Annulla"
     }).then(async (result) => {
-        try {
-            const response = await fetch(`/Home/DeleteEvent?eventId=${encodeURIComponent(eventId)}`, {
-                method: "POST",
-            });
-            if (!response.ok) showSimpleAlert("error", "Si è verificato un errore nella richiesta.");
-            window.location.href = "/Home/Index";
-            showSimpleAlert("success", "Evento eliminato con successo!");
-        } catch (err) {
-            showSimpleAlert("error", "Si è verificato un errore durante l'eliminazione.");
+        if(result.isConfirmed){
+            try {
+                const response = await fetch(`/Home/DeleteEvent?eventId=${encodeURIComponent(eventId)}`, {
+                    method: "POST",
+                });
+                if (!response.ok) showSimpleAlert("error", "Si è verificato un errore nella richiesta.");
+                window.location.href = "/Home/Index";
+                showSimpleAlert("success", "Evento eliminato con successo!");
+            } catch (err) {
+                showSimpleAlert("error", "Si è verificato un errore durante l'eliminazione.");
+            }
         }
     });
 }

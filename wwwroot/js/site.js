@@ -224,7 +224,9 @@ function initializeModal(modalType, element){
         document.getElementById('eventDuration').value = 0;
         document.getElementById('eventNotes').value = "";
         document.getElementById('eventTitle').value = "";
-
+        
+        generateQRCode(`+39${mobile}`);
+        
         let eventModal = new bootstrap.Modal(document.getElementById('eventModal'));
         eventModal.show();
     }
@@ -339,6 +341,36 @@ async function loadCustomerData(customerId) {
     document.getElementById('customerEmail').value = customer.email || "";
     document.getElementById('customerPhone').value = customer.mobile;
 
+    generateQRCode(`+39${customer.mobile}`);
+
     let eventModal = new bootstrap.Modal(document.getElementById('eventModal'));
     eventModal.show();
+}
+
+//pulisce il blocco e genera un nuovo qrcode
+function generateQRCode(phoneNumber) {
+    const wrapper = document.getElementById("qrcode-wrapper");
+
+    if (!wrapper) return;
+
+    // Pulisci completamente il wrapper (incluso l'elemento #qrcode)
+    wrapper.innerHTML = "";
+
+    // Ricrea il blocco interno
+    const qrContainer = document.createElement("div");
+    qrContainer.id = "qrcode";
+    qrContainer.style.width = "80px";
+    qrContainer.style.height = "80px";
+
+    wrapper.appendChild(qrContainer);
+
+    // Genera il nuovo QR code
+    new QRCode(qrContainer, {
+        text: `tel:${phoneNumber}`,
+        width: 80,
+        height: 80,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H
+    });
 }
