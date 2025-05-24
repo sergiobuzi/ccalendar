@@ -1,0 +1,23 @@
+@model List<CustomerListViewModel>
+
+<table id="table" class="display" style="width:100%">
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Telefono</th>
+            <th>Stato cliente</th>
+            <th>Utima visita</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var customer in Model)
+        {
+            <tr>
+                <td>@customer.Surname @customer.Name</td>
+                <td>@customer.Mobile</td>
+                <td>@customer.IsActive</td>
+                <td>@customer.LastVisitDate</td>
+            </tr>
+        }
+    </tbody>
+</table>

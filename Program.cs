@@ -36,13 +36,6 @@ builder.Services.AddScoped<IHomeServices, HomeServices>();
 
 var app = builder.Build();
 
-//seeder
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    SeedData.Initialize(services);
-}
-
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {

@@ -12,7 +12,9 @@ namespace ccalendar.Models.ViewModels.Customers
         public string Surname { get; set; } = string.Empty;
         public string Mobile { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
+        public bool IsActive { get; set; }
         public bool ToCall { get; set; }
+        public DateTime? LastContact { get; set; }
         public DateTime? LastVisitDate { get; set; }
     }
 }

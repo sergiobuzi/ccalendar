@@ -5,6 +5,7 @@ using ccalendar.Services.Interfaces;
 using ccalendar.Services;
 using Microsoft.AspNetCore.Authorization;
 using ccalendar.Models.ViewModels.Events;
+using ccalendar.Models.ViewModels.Customers;
 
 namespace ccalendar.Controllers;
 
@@ -30,6 +31,13 @@ public class HomeController : Controller
     {
         JsonResult json = await _homeServices.GetEvents();
         return json;
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Customers()
+    {
+        List<CustomerListViewModel> customers = await _homeServices.GetCustomers();
+        return View(customers);
     }
 
     [HttpGet]
@@ -73,6 +81,13 @@ public class HomeController : Controller
     {
         bool result = await _homeServices.CreateCustomerAndEvent(model);
         return result;
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> UpdateEvent(EventDetails dto)
+    {
+        EventDetails result = await _homeServices.UpdateEvent(dto);
+        return View("EditEvent", result);
     }
 
     [HttpPost]

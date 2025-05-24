@@ -167,13 +167,46 @@ namespace ccalendar.Services
             }
         }
 
+        public async Task<List<CustomerListViewModel>> GetCustomers()
+        {
+            try
+            {
+                List<Customer> model = await _context.Customers
+                    .Where(c => c.Active == true)
+                    .ToListAsync();
+
+                List<CustomerListViewModel> customers = new List<CustomerListViewModel>();
+                foreach(var customer in model)
+                {
+                    customers.Add(new CustomerListViewModel
+                    {
+                        CustomerId = customer.CustomerId,
+                        Name = customer.Name,
+                        Surname = customer.Surname,
+                        Mobile = customer.Mobile,
+                        Email = customer.Email,
+                        ToCall = customer.ToCall,
+                        IsActive = customer.Active,
+                        LastContact = customer.LastContact,
+                        LastVisitDate = customer.LastVisitDate
+                    });
+                }
+                return customers;
+            }
+            catch (Exception ee)
+            {
+                throw new Exception(ee.Message);
+            }
+        }
+
         public async Task<JsonResult> EventDetails(int id)
         {
             try
             {
                 var eventDetails = await _context.Events
                     .Where(e => e.EventId == id)
-                    .Select(e => new {
+                    .Select(e => new
+                    {
                         id = e.EventId,
                         title = e.Title,
                         start = e.Start,
@@ -185,14 +218,16 @@ namespace ccalendar.Services
 
                 var customerDetails = await _context.Customers
                     .Where(c => c.CustomerId == eventDetails.customerId)
-                    .Select(c => new {
+                    .Select(c => new
+                    {
                         name = c.Name,
                         surname = c.Surname,
                         phone = c.Mobile,
                         email = c.Email
                     }).FirstOrDefaultAsync();
 
-                return new JsonResult(new {
+                return new JsonResult(new
+                {
                     Event = eventDetails,
                     Customer = customerDetails
                 });
@@ -284,6 +319,31 @@ namespace ccalendar.Services
                 .FirstOrDefaultAsync();
     
             return new JsonResult(customer);
+        }
+
+        public async Task<EventDetails> UpdateEvent(EventDetails dto)
+        {
+            try
+            {
+                var eventToUpdate = await _context.Events
+                    .FirstOrDefaultAsync(e => e.EventId == dto.EventId);
+
+                if (eventToUpdate == null)
+                    return null;
+
+                eventToUpdate.Title = dto.Title;
+                eventToUpdate.Start = dto.Start;
+                eventToUpdate.End = dto.End;
+                eventToUpdate.Notes = dto.Notes;
+
+                await _context.SaveChangesAsync();
+
+                return dto;
+            }
+            catch (Exception ee)
+            {
+                throw new Exception(ee.Message);
+            }
         }
         
         public async Task<bool> DeleteEvent(int eventId)
