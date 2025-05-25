@@ -8,28 +8,28 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Aggiunge il database context
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Aggiunge Identity
-builder.Services.AddDefaultIdentity<IdentityUser>(options =>
-{
-    options.SignIn.RequireConfirmedAccount = true;
-    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5); 
-    options.Lockout.MaxFailedAccessAttempts = 5;
-    options.Lockout.AllowedForNewUsers = true;
-}) 
-.AddEntityFrameworkStores<ApplicationDbContext>()
-.AddDefaultTokenProviders();
+// builder.Services.AddDefaultIdentity<IdentityUser>(options =>
+// {
+//     options.SignIn.RequireConfirmedAccount = true;
+//     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5); 
+//     options.Lockout.MaxFailedAccessAttempts = 5;
+//     options.Lockout.AllowedForNewUsers = true;
+// }) 
+// .AddEntityFrameworkStores<ApplicationDbContext>()
+// .AddDefaultTokenProviders();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddRazorPages(options =>
-{
-    options.Conventions.AuthorizeAreaFolder("Identity", "/");
-    options.Conventions.AllowAnonymousToAreaPage("Identity", "/Account/Login");
-    options.Conventions.AllowAnonymousToAreaPage("Identity", "/Account/Logout");
-});
+// builder.Services.AddRazorPages(options =>
+// {
+//     options.Conventions.AuthorizeAreaFolder("Identity", "/");
+//     options.Conventions.AllowAnonymousToAreaPage("Identity", "/Account/Login");
+//     options.Conventions.AllowAnonymousToAreaPage("Identity", "/Account/Logout");
+// });
 
 // Dependency Injection
 builder.Services.AddScoped<IHomeServices, HomeServices>();
@@ -44,12 +44,12 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.MapRazorPages();
+// app.MapRazorPages();
 
 app.UseHttpsRedirection();
 app.UseRouting();
 
-app.UseAuthorization();
+// app.UseAuthorization();
 
 app.MapStaticAssets();
 

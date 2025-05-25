@@ -27,9 +27,5 @@ namespace ccalendar.Models
 
         public string? Notes { get; set; }
 
-        public bool IsVisit { get; set; } = false;
-
-        [MaxLength(32)]
-        public string? EventType { get; set; }
     }
 }

@@ -15,7 +15,5 @@ namespace ccalendar.Models.ViewModels.Events
         public bool AllDay { get; set; }
         public string? Color { get; set; }
         public string? Notes { get; set; }
-        public bool IsVisit { get; set; }
-        public string? EventType { get; set; }
     }
 }

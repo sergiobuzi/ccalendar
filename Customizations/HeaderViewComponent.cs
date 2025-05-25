@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
-[Authorize]
 public class HeaderViewComponent : ViewComponent
 {
     private readonly IHomeServices _homeServices;

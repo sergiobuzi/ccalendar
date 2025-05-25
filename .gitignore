@@ -77,3 +77,6 @@ appsettings.Development.json
 
 # JetBrains Rider
 *.sln.iml
+
+# Database
+app.db

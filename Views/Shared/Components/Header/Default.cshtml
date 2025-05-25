@@ -10,47 +10,45 @@
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            @if (SignInManager.IsSignedIn(User))
-            {
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <div class="btn-group">
-                                <button class="btn btn-primary dropdown-toggle position-relative" type="button"
-                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="fa-solid fa-phone me-2"></i>Da chiamare
-                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="customer-list-badge-number">
-                                        @ViewBag.GetCustomersToRecallNumber
-                                    </span>
-                                </button>
-                                <ul class="dropdown-menu">
-                                    @if(ViewBag.GetCustomersToRecallNumber <= 0)
+            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                <ul class="navbar-nav flex-grow-1">
+                    <li class="nav-item">
+                        <div class="btn-group">
+                            <button class="btn btn-primary dropdown-toggle position-relative" type="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-phone me-2"></i>Da chiamare
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="customer-list-badge-number">
+                                    @ViewBag.GetCustomersToRecallNumber
+                                </span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                @if(ViewBag.GetCustomersToRecallNumber <= 0)
+                                {
+                                    <p class="p-3">Nessun cliente da chiamare</p>
+                                }
+                                else
+                                {
+                                    @foreach(var customer in Model)
                                     {
-                                        <p class="p-3">Nessun cliente da chiamare</p>
+                                        <li>
+                                            <a class="dropdown-item customer-element" href="javascript:void(0)"
+                                                data-customer-id="@customer.CustomerId"
+                                                data-name="@customer.Name"
+                                                data-surname="@customer.Surname"
+                                                data-mobile="@customer.Mobile"
+                                                data-email="@customer.Email"
+                                                onclick="initializeModal('withData', this)">@customer.Name @customer.Surname
+                                            </a>
+                                        </li>
                                     }
-                                    else
-                                    {
-                                        @foreach(var customer in Model)
-                                        {
-                                            <li>
-                                                <a class="dropdown-item customer-element" href="javascript:void(0)"
-                                                    data-customer-id="@customer.CustomerId"
-                                                    data-name="@customer.Name"
-                                                    data-surname="@customer.Surname"
-                                                    data-mobile="@customer.Mobile"
-                                                    data-email="@customer.Email"
-                                                    onclick="initializeModal('withData', this)">@customer.Name @customer.Surname
-                                                </a>
-                                            </li>
-                                        }
-                                    }
-                                </ul>
-                            </div>
-                        </li>
-                    </ul>
-                    <partial name="_LoginPartial" />
-                </div>
-            }
+                                }
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+                @* <partial name="_LoginPartial" /> *@
+                <a class="btn btn-secondary" asp-controller="Home" asp-action="Customers"><i class="fa-solid fa-users me-2"></i> Clienti</a> @* TODO  lista clienti per rimuovere inattivi e aggiungerne nuovi*@
+            </div>
         </div>
     </nav>
 </header>

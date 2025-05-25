@@ -9,7 +9,6 @@ using ccalendar.Models.ViewModels.Customers;
 
 namespace ccalendar.Controllers;
 
-[Authorize]
 public class HomeController : Controller
 {
     private readonly IHomeServices _homeServices;
@@ -70,16 +69,16 @@ public class HomeController : Controller
     }
 
     [HttpPost]
-    public async Task<bool> CreateEvent([FromBody] EventCreateDto model)
+    public async Task<int> CreateEvent([FromBody] EventCreateDto model)
     {
-        bool result = await _homeServices.CreateEvent(model);
+        int result = await _homeServices.CreateEvent(model);
         return result;
     }
 
     [HttpPost]
-    public async Task<bool> CreateCustomerAndEvent([FromBody] EventCreateDto model)
+    public async Task<int> CreateCustomerAndEvent([FromBody] EventCreateDto model)
     {
-        bool result = await _homeServices.CreateCustomerAndEvent(model);
+        int result = await _homeServices.CreateCustomerAndEvent(model);
         return result;
     }
 

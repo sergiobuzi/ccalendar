@@ -1,43 +1,26 @@
-@using Microsoft.AspNetCore.Identity
-
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
-
 <ul class="navbar-nav">
-    @if (SignInManager.IsSignedIn(User))
-    {
-        <div class="collapse navbar-collapse">
-            <ul class="navbar-nav">
-                <li class="nav-item dropdown">
-                    <button class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                        Lorenzo <i class="fa-solid fa-user-doctor ms-2"></i>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu">
-                        <li class="nav-item dropdown-item">
-                            <a id="manage" class="nav-link" asp-area="Identity" asp-page="/Account/Manage/Index"
-                                title="Manage">Profilo</a>
-                        </li>
-                        <li class="nav-item dropdown-item">
-                            <a class="nav-link" asp-controller="Home" asp-action="Customers">Clienti</a> @* TODO  lista clienti per rimuovere inattivi e aggiungerne nuovi*@
-                        </li>
-                        <li class="nav-item dropdown-item">
-                            <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout"
-                                asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                                <button id="logout" type="submit" class="nav-link btn btn-link text-danger border-0">Logout</button>
-                            </form>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-    }
-    else
-    {
-        <li class="nav-item">
-            <a class="nav-link text-dark" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link text-dark" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
-        </li>
-    }
+    <div class="collapse navbar-collapse">
+        <ul class="navbar-nav">
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    Lorenzo <i class="fa-solid fa-user-doctor ms-2"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu">
+                    <li class="nav-item dropdown-item">
+                        <a id="manage" class="nav-link" asp-area="Identity" asp-page="/Account/Manage/Index"
+                            title="Manage">Profilo</a>
+                    </li>
+                    <li class="nav-item dropdown-item">
+                        <a class="nav-link" asp-controller="Home" asp-action="Customers">Clienti</a> @* TODO  lista clienti per rimuovere inattivi e aggiungerne nuovi*@
+                    </li>
+                    <li class="nav-item dropdown-item">
+                        <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout"
+                            asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                            <button id="logout" type="submit" class="nav-link btn btn-link text-danger border-0">Logout</button>
+                        </form>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
 </ul>

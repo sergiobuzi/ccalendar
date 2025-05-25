@@ -54,7 +54,7 @@ namespace ccalendar.Services
             }
         }
 
-        public async Task<bool> CreateEvent(EventCreateDto dto)
+        public async Task<int> CreateEvent(EventCreateDto dto)
         {
             try
             {
@@ -62,7 +62,7 @@ namespace ccalendar.Services
                     .FirstOrDefaultAsync(c => c.CustomerId == dto.CustomerId);
 
                 if (customer == null)
-                    return false;
+                    return 0;
 
                 var localStart = TimeZoneInfo.ConvertTimeFromUtc(
                     dto.Start.ToUniversalTime(),
@@ -88,7 +88,7 @@ namespace ccalendar.Services
                 customer.LastContact = DateTime.Now;
                 await _context.SaveChangesAsync();
 
-                return true;
+                return model.EventId;
             }
             catch (Exception ee)
             {
@@ -96,7 +96,7 @@ namespace ccalendar.Services
             }
         }
 
-        public async Task<bool> CreateCustomerAndEvent(EventCreateDto dto)
+        public async Task<int> CreateCustomerAndEvent(EventCreateDto dto)
         {
             try
             {
@@ -108,8 +108,9 @@ namespace ccalendar.Services
                     Mobile = dto.CustomerPhone,
                     ToCall = false,
                     Active = true,
+                    Notes = dto.Notes,
                     LastContact = DateTime.Now,
-                    CreatedAt = DateAndTime.Now,
+                    CreatedAt = DateTime.Now,
                 };
 
                 await _context.Customers.AddAsync(customer);
@@ -137,7 +138,7 @@ namespace ccalendar.Services
                 await _context.Events.AddAsync(model);
                 await _context.SaveChangesAsync();
 
-                return true;
+                return model.EventId;
             }
             catch (Exception ee)
             {
@@ -248,7 +249,7 @@ namespace ccalendar.Services
                     .FirstOrDefaultAsync();
 
                 Customer customerDetails = await _context.Customers
-                    .Where(c => c.CustomerId ==eventDetails.CustomerId)
+                    .Where(c => c.CustomerId == eventDetails.CustomerId)
                     .FirstOrDefaultAsync();
 
                 EventDetails model = new EventDetails()
@@ -286,7 +287,7 @@ namespace ccalendar.Services
             }
 
             var customers = await _context.Customers
-                .Where(c => c.Name.Contains(text) || c.Surname.Contains(text))
+                .Where(c => EF.Functions.Like(c.Name, $"%{text}%") || EF.Functions.Like(c.Surname, $"%{text}%"))
                 .Select(c => new
                 {
                     Id = c.CustomerId,
