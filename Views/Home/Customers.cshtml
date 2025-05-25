@@ -7,6 +7,7 @@
             <th>Telefono</th>
             <th>Stato cliente</th>
             <th>Utima visita</th>
+            <th>Azioni</th>
         </tr>
     </thead>
     <tbody>
@@ -15,9 +16,56 @@
             <tr>
                 <td>@customer.Surname @customer.Name</td>
                 <td>@customer.Mobile</td>
-                <td>@customer.IsActive</td>
-                <td>@customer.LastVisitDate</td>
+                <td>
+                    @if(customer.IsActive)
+                    {
+                        <span>&#x2705 Attivo</span>
+                    }
+                    else
+                    {
+                        <span>&#x274C Non attivo</span>
+                    }
+                </td>
+                <td>@(customer.LastContact?.ToString("dd/MM/yyyy") ?? "-")</td>
+                <td>
+                    <a asp-controller="Home" asp-action="CustomerDetails" asp-route-customerId="@customer.CustomerId"
+                    class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover">
+                    Modifica <i class="fa-solid fa-pen ms-2"></i></a>
+                </td>
             </tr>
         }
     </tbody>
 </table>
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#table').DataTable({
+                order: [[0, 'desc']],
+                responsive: true,
+                language: {
+                    "sEmptyTable": "Nessun dato disponibile nella tabella",
+                    "sInfo": "Vista da _START_ a _END_ di _TOTAL_ elementi",
+                    "sInfoEmpty": "Vista da 0 a 0 di 0 elementi",
+                    "sInfoFiltered": "(filtrati da _MAX_ elementi totali)",
+                    "sLengthMenu": "Visualizza _MENU_ elementi",
+                    "sLoadingRecords": "Caricamento...",
+                    "sProcessing": "Elaborazione...",
+                    "sSearch": "Cerca:",
+                    "sZeroRecords": "Nessun elemento corrispondente trovato",
+                    "oPaginate": {
+                        "sFirst": "Prima",
+                        "sLast": "Ultima",
+                        "sNext": "Successiva",
+                        "sPrevious": "Precedente"
+                    },
+                    "oAria": {
+                        "sSortAscending": ": attiva per ordinare la colonna in ordine crescente",
+                        "sSortDescending": ": attiva per ordinare la colonna in ordine decrescente"
+                    }
+                }
+            });
+        });
+    </script>
+}

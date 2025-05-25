@@ -11,7 +11,7 @@ using ccalendar.Data;
 namespace ccalendar.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250524200047_InitialCreate")]
+    [Migration("20250525131736_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -33,14 +33,10 @@ namespace ccalendar.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasMaxLength(64)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("LastContact")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime?>("LastVisitDate")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Mobile")

@@ -1,0 +1,90 @@
+@model CustomerDto
+
+<div class="container mt-5 mb-5">
+    <form asp-controller="Home" asp-action="UpdateCustomer" method="post" class="row g-3">
+    
+        <input type="hidden" asp-for="CustomerId"/>
+
+        <div class="col-md-12 mb-3">
+            <a asp-action="Index" class="text-white"><i class="fa-solid fa-arrow-left"></i> Torna alla Home</a>
+        </div>
+
+        <div class="row">
+            <h3><i class="fa-solid fa-user"></i> Cliente</h3>
+            <hr>
+        </div>
+
+        <div class="col-md-4">
+            <label asp-for="Name" class="form-label">Nome</label>
+            <input asp-for="Name" class="form-control"/>
+        </div>
+    
+        <div class="col-md-4">
+            <label asp-for="Surname" class="form-label">Cognome</label>
+            <input asp-for="Surname" class="form-control"/>
+        </div>
+    
+        <div class="col-md-4">
+            <label asp-for="Mobile" class="form-label">Telefono</label>
+            <input asp-for="Mobile" class="form-control"/>
+        </div>
+    
+        <div class="col-md-4">
+            <label asp-for="Email" class="form-label">Email</label>
+            <input asp-for="Email" class="form-control" type="email"/>
+        </div>
+    
+        <div class="col-md-4">
+            <label asp-for="LastContact" class="form-label">Ultima Visita</label>
+            <input asp-for="LastContact" class="form-control" type="date"/>
+        </div>
+
+        <div class="col-md-4">
+            <label asp-for="Active" class="form-label">Cliente Attivo?</label>
+            <div class="d-flex flex-column gap-2 align-items-start">
+                <div>
+                    <input type="radio" asp-for="Active" value="true" id="active-yes" />
+                    <label for="active-yes">&#x2705 Attivo</label>
+                </div>
+                <div>
+                    <input type="radio" asp-for="Active" value="false" id="active-no" />
+                    <label for="active-no">&#x274C Non attivo</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 mt-4 d-flex mb-5">
+            <button type="submit" class="btn btn-primary">Salva modifiche <i class="fa-solid fa-pen ms-2"></i></button>
+        </div>
+
+    </form>
+
+    @if(Model.Events.Count() > 0)
+    {
+        <div class="row">
+            <h3><i class="fa-solid fa-tooth"></i> Eventi</h3>
+            <hr>
+        </div>
+
+        <div class="row">
+            @foreach (var item in Model.Events)
+            {
+                <div class="col-lg-4 col-sm-6 mb-3 d-flex">
+                    <div class="card h-100 w-100" style="background-color: @item.Color;">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title text-white mb-4">@item.Title</h5>
+                            <p class="card-text text-white">
+                                <strong>@item.Start.ToString("dd/MM/yyyy")</strong> 
+                                @item.Start.ToString("HH:mm") - @item.End?.ToString("HH:mm")
+                            </p>
+                            <p class="card-text text-white">
+                                @item.Notes
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }   
+
+</div>

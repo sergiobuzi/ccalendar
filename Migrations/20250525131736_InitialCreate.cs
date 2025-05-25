@@ -20,13 +20,12 @@ namespace ccalendar.Migrations
                     Name = table.Column<string>(type: "TEXT", maxLength: 24, nullable: false),
                     Surname = table.Column<string>(type: "TEXT", maxLength: 24, nullable: false),
                     Mobile = table.Column<string>(type: "TEXT", maxLength: 16, nullable: false),
-                    Email = table.Column<string>(type: "TEXT", maxLength: 64, nullable: false),
+                    Email = table.Column<string>(type: "TEXT", maxLength: 64, nullable: true),
                     ToCall = table.Column<bool>(type: "INTEGER", nullable: false),
                     Active = table.Column<bool>(type: "INTEGER", nullable: false),
                     LastContact = table.Column<DateTime>(type: "TEXT", nullable: true),
                     Notes = table.Column<string>(type: "TEXT", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    LastVisitDate = table.Column<DateTime>(type: "TEXT", nullable: true)
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {

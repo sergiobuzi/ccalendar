@@ -55,6 +55,14 @@ public class HomeController : Controller
     }
 
     [HttpGet]
+    [Route("Home/CustomerDetails/{customerId}")]
+    public async Task<IActionResult> CustomerDetails(int customerId)
+    {
+        CustomerDto model = await _homeServices.CustomerDetails(customerId);
+        return View("EditCustomer", model);
+    }
+
+    [HttpGet]
     public async Task<JsonResult> SearchCustomers([FromQuery]string query)
     {
         JsonResult json = await _homeServices.SearchCustomers(query);
@@ -87,6 +95,13 @@ public class HomeController : Controller
     {
         EventDetails result = await _homeServices.UpdateEvent(dto);
         return View("EditEvent", result);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> UpdateCustomer(CustomerDto dto)
+    {
+        CustomerDto result = await _homeServices.UpdateCustomer(dto);
+        return View("EditCustomer", result);
     }
 
     [HttpPost]

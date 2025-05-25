@@ -30,14 +30,10 @@ namespace ccalendar.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasMaxLength(64)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("LastContact")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime?>("LastVisitDate")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Mobile")

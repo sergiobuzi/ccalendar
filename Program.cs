@@ -46,7 +46,7 @@ if (!app.Environment.IsDevelopment())
 
 // app.MapRazorPages();
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 app.UseRouting();
 
 // app.UseAuthorization();
