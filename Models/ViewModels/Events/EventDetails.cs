@@ -14,12 +14,12 @@ namespace ccalendar.Models.ViewModels.Events
         public string Title { get; set; } = string.Empty;
         public string? Color { get; set; }
         public string? Notes { get; set; }
-        
+
         public int CustomerId { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Surname { get; set; } = string.Empty;
         public string Mobile { get; set; } = string.Empty;
-        public string Email { get; set; } = string.Empty;
-        public DateTime? LastVisitDate { get; set; }
+        public string? Email { get; set; } = string.Empty;
+        public DateTime? LastContact { get; set; }
     }
 }

@@ -28,8 +28,11 @@ namespace ccalendar.Services
         {
             try
             {
+                var cutoff = DateTime.Now.AddMonths(-5).AddDays(-15);
+
+                
                 List<Customer> model = await _context.Customers
-                    .Where(c => c.Active == true && c.LastContact < DateTime.Now.AddMonths(-5).AddDays(-15))
+                    .Where(c => c.Active && c.LastContact < cutoff)
                     .ToListAsync();
 
                 List<CustomerListViewModel> customersToRecall = new List<CustomerListViewModel>();
@@ -43,7 +46,7 @@ namespace ccalendar.Services
                         Mobile = customer.Mobile,
                         Email = customer.Email,
                         ToCall = customer.ToCall,
-                        LastVisitDate = customer.LastVisitDate
+                        LastContact = customer.LastContact
                     });
                 }
                 return customersToRecall;
@@ -54,7 +57,7 @@ namespace ccalendar.Services
             }
         }
 
-        public async Task<bool> CreateEvent(EventCreateDto dto)
+        public async Task<int> CreateEvent(EventCreateDto dto)
         {
             try
             {
@@ -62,7 +65,7 @@ namespace ccalendar.Services
                     .FirstOrDefaultAsync(c => c.CustomerId == dto.CustomerId);
 
                 if (customer == null)
-                    return false;
+                    return 0;
 
                 var localStart = TimeZoneInfo.ConvertTimeFromUtc(
                     dto.Start.ToUniversalTime(),
@@ -88,7 +91,7 @@ namespace ccalendar.Services
                 customer.LastContact = DateTime.Now;
                 await _context.SaveChangesAsync();
 
-                return true;
+                return model.EventId;
             }
             catch (Exception ee)
             {
@@ -96,7 +99,7 @@ namespace ccalendar.Services
             }
         }
 
-        public async Task<bool> CreateCustomerAndEvent(EventCreateDto dto)
+        public async Task<int> CreateCustomerAndEvent(EventCreateDto dto)
         {
             try
             {
@@ -108,8 +111,9 @@ namespace ccalendar.Services
                     Mobile = dto.CustomerPhone,
                     ToCall = false,
                     Active = true,
+                    Notes = dto.Notes,
                     LastContact = DateTime.Now,
-                    CreatedAt = DateAndTime.Now,
+                    CreatedAt = DateTime.Now,
                 };
 
                 await _context.Customers.AddAsync(customer);
@@ -137,7 +141,7 @@ namespace ccalendar.Services
                 await _context.Events.AddAsync(model);
                 await _context.SaveChangesAsync();
 
-                return true;
+                return model.EventId;
             }
             catch (Exception ee)
             {
@@ -172,7 +176,6 @@ namespace ccalendar.Services
             try
             {
                 List<Customer> model = await _context.Customers
-                    .Where(c => c.Active == true)
                     .ToListAsync();
 
                 List<CustomerListViewModel> customers = new List<CustomerListViewModel>();
@@ -188,7 +191,6 @@ namespace ccalendar.Services
                         ToCall = customer.ToCall,
                         IsActive = customer.Active,
                         LastContact = customer.LastContact,
-                        LastVisitDate = customer.LastVisitDate
                     });
                 }
                 return customers;
@@ -237,18 +239,62 @@ namespace ccalendar.Services
                 throw new Exception(ee.Message);
             }
         }
+        
+        public async Task<CustomerDto> CustomerDetails(int customerId)
+        {
+            try
+            {
+               
+                Customer customer = await _context.Customers
+                    .Where(c => c.CustomerId == customerId)
+                    .FirstOrDefaultAsync();
+
+                if (customer == null)
+                    return null;
+
+                CustomerDto model = new CustomerDto()
+                {
+                    CustomerId = customer.CustomerId,
+                    Name = customer.Name,
+                    Surname = customer.Surname,
+                    Mobile = customer.Mobile,
+                    Email = customer.Email,
+                    Active = customer.Active,
+                    LastContact = customer.LastContact,
+                    Notes = customer.Notes,
+                };
+
+                model.Events = await _context.Events
+                    .Where(e => e.CustomerId == customerId)
+                    .Select(e => new EventListViewModel
+                    {
+                        EventId = e.EventId,
+                        Title = e.Title,
+                        Start = e.Start,
+                        End = e.End,
+                        Color = e.Color,
+                        Notes = e.Notes
+                    }).ToListAsync();
+
+                return model;
+            }
+            catch (Exception ee)
+            {
+                throw new Exception(ee.Message);
+            }
+        }
 
         public async Task<EventDetails> EditEvent(int eventId)
         {
             try
             {
-                
+
                 Event eventDetails = await _context.Events
                     .Where(e => e.EventId == eventId)
                     .FirstOrDefaultAsync();
 
                 Customer customerDetails = await _context.Customers
-                    .Where(c => c.CustomerId ==eventDetails.CustomerId)
+                    .Where(c => c.CustomerId == eventDetails.CustomerId)
                     .FirstOrDefaultAsync();
 
                 EventDetails model = new EventDetails()
@@ -265,11 +311,11 @@ namespace ccalendar.Services
                     Surname = customerDetails.Surname,
                     Mobile = customerDetails.Mobile,
                     Email = customerDetails.Email,
-                    LastVisitDate = customerDetails.LastVisitDate
+                    LastContact = customerDetails.LastContact
                 };
 
                 return model;
-            
+
             }
             catch (Exception ee)
             {
@@ -286,7 +332,7 @@ namespace ccalendar.Services
             }
 
             var customers = await _context.Customers
-                .Where(c => c.Name.Contains(text) || c.Surname.Contains(text))
+                .Where(c => EF.Functions.Like(c.Name, $"%{text}%") || EF.Functions.Like(c.Surname, $"%{text}%"))
                 .Select(c => new
                 {
                     Id = c.CustomerId,
@@ -339,6 +385,59 @@ namespace ccalendar.Services
                 await _context.SaveChangesAsync();
 
                 return dto;
+            }
+            catch (Exception ee)
+            {
+                throw new Exception(ee.Message);
+            }
+        }
+
+        public async Task<CustomerDto> UpdateCustomer(CustomerDto dto)
+        {
+            try
+            {
+                var customer = await _context.Customers
+                    .FirstOrDefaultAsync(c => c.CustomerId == dto.CustomerId);
+
+                if (customer == null)
+                    return null;
+
+                customer.Name = dto.Name;
+                customer.Surname = dto.Surname;
+                customer.Mobile = dto.Mobile;
+                customer.Email = dto.Email;
+                customer.Active = dto.Active;
+                customer.LastContact = dto.LastContact;
+                customer.Notes = dto.Notes;
+
+                _context.Customers.Update(customer);
+                await _context.SaveChangesAsync();
+
+                CustomerDto model = new CustomerDto()
+                {
+                    CustomerId = customer.CustomerId,
+                    Name = customer.Name,
+                    Surname = customer.Surname,
+                    Mobile = customer.Mobile,
+                    Email = customer.Email,
+                    Active = customer.Active,
+                    LastContact = customer.LastContact,
+                    Notes = customer.Notes
+                };
+                
+                model.Events = await _context.Events
+                    .Where(e => e.CustomerId == customer.CustomerId)
+                    .Select(e => new EventListViewModel
+                    {
+                        EventId = e.EventId,
+                        Title = e.Title,
+                        Start = e.Start,
+                        End = e.End,
+                        Color = e.Color,
+                        Notes = e.Notes
+                    }).ToListAsync();
+                
+                return model;
             }
             catch (Exception ee)
             {

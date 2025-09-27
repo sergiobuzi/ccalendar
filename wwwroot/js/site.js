@@ -113,6 +113,7 @@
     
                     // Aggiungi l'evento nel calendario
                     calendar.addEvent({
+                        id: obj,
                         title: title,
                         start: start,
                         end: end,
@@ -151,7 +152,7 @@
                         body: JSON.stringify(eventData)
                     });
     
-                    if (!response.ok) {
+                    if (!response.ok || response === 0) {
                         showSimpleAlert("error", "Errore di comunicazione.");
                         throw new Error(`Response status: ${response.status}`);
                     }
@@ -165,6 +166,7 @@
     
                     // Aggiungi l'evento nel calendario
                     calendar.addEvent({
+                        id: obj,
                         title: title,
                         start: start,
                         end: end,

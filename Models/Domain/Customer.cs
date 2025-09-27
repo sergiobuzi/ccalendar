@@ -21,7 +21,7 @@ namespace ccalendar.Models
         public string Mobile { get; set; } = string.Empty;
 
         [MaxLength(64)]
-        public string Email { get; set; } = string.Empty;
+        public string? Email { get; set; } = string.Empty;
 
         public bool ToCall { get; set; }
         public bool Active { get; set; }
@@ -31,9 +31,7 @@ namespace ccalendar.Models
         public string? Notes { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
-        public DateTime? LastVisitDate { get; set; }
-
+        
         public ICollection<Event> Events { get; set; } = new List<Event>();
     }
 }
