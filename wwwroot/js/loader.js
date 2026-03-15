@@ -7,7 +7,7 @@ window.addEventListener('load', function () {
 
             setTimeout(function () {
                 loader.remove();
-            }, 600);
+            }, 300);
         }
     }, 1000);
 });

@@ -111,7 +111,6 @@ namespace ccalendar.Services
                     Mobile = dto.CustomerPhone,
                     ToCall = false,
                     Active = true,
-                    Notes = dto.Notes,
                     LastContact = DateTime.Now,
                     CreatedAt = DateTime.Now,
                 };
@@ -288,7 +287,6 @@ namespace ccalendar.Services
         {
             try
             {
-
                 Event eventDetails = await _context.Events
                     .Where(e => e.EventId == eventId)
                     .FirstOrDefaultAsync();

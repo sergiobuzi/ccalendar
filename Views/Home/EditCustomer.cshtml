@@ -67,7 +67,7 @@
         </div>
 
         <div class="row">
-            @foreach (var item in Model.Events)
+            @foreach (var item in Model.Events.OrderByDescending(e => e.EventId))
             {
                 <div class="col-lg-4 col-sm-6 mb-3 d-flex">
                     <div class="card h-100 w-100" style="background-color: @item.Color;">
